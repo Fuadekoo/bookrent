@@ -39,16 +39,20 @@ const RegisterPage = () => {
   return (
     <div className="flex h-screen">
       <div className="flex w-full">
-        <div className="w-1/2 bg-blue-900 flex items-center justify-center">
+        <div className="w-1/2 h-full bg-blue-950 flex items-center justify-center">
           <div className="text-white text-6xl flex flex-col items-center">
-            <img src="/path-to-your-image.png" alt="Your Image" className="mb-4" />
+            <img src="/books.png" alt="Your Image" className="mb-4" />
             <i className="fas fa-book"></i>
           </div>
         </div>
-        <div className="w-1/2 flex items-center justify-center">
-          <div className="w-full max-w-md">
-            <h1 className="text-3xl font-bold mb-6 text-center">Book Rent</h1>
+        <div className="w-1/2 flex items-center justify-center ml-0">
+          <div className="w-full max-w-md ml-0">
+            <div className="flex items-center justify-center mb-6">
+              <img src="/book2.png" alt="Books" className="w-9 h-9 mr-2" />
+              <h1 className="text-3xl font-bold text-c">Book Rent</h1>
+            </div>
             <h2 className="text-xl mb-6 text-center">Signup as Owner</h2>
+            <hr className="mb-6" />
             <form onSubmit={handleRegister} className="rounded pt-6 pb-8 mb-4 ml-0">
               <div className="mb-4 relative">
                 <input
@@ -138,13 +142,13 @@ const RegisterPage = () => {
               <div className="flex items-center justify-between mt-6">
                 <button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full py-2 px-3 rounded focus:outline-none focus:shadow-outline"
+                  className="bg-cyan-400 hover:bg-blue-700 text-white font-bold w-full py-2 px-3 rounded focus:outline-none focus:shadow-outline"
                 >
                   SIGN UP
                 </button>
               </div>
               <div className="text-center mt-4">
-                <span>Already have an account?</span><a href="#" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                <span>Already have an account?</span><a href="/login" className="inline-block align-baseline font-bold text-sm text-cyan-400 hover:text-blue-800">
                   Login
                 </a>
               </div>
