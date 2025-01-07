@@ -22,20 +22,30 @@ async function verifyToken(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const rentId = url.pathname.split('/').pop();
   const verification = await verifyToken(req);
   if (verification.error) {
     return NextResponse.json({ error: verification.error }, { status: verification.status });
   }
 
   try {
-    const rents = await prisma.rent.findMany();
-    return NextResponse.json(rents, { status: 200 });
+    const rent = await prisma.rent.findUnique({
+      where: { id: Number(rentId) },
+    });
+    if (rent) {
+      return NextResponse.json(rent, { status: 200 });
+    } else {
+      return NextResponse.json({ error: 'Rent not found' }, { status: 404 });
+    }
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch rents' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch rent' }, { status: 500 });
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function PUT(req: NextRequest) {
+  const url = new URL(req.url);
+  const rentId = url.pathname.split('/').pop();
   const verification = await verifyToken(req);
   if (verification.error) {
     return NextResponse.json({ error: verification.error }, { status: verification.status });
@@ -49,7 +59,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
-    const rent = await prisma.rent.create({
+    const rent = await prisma.rent.update({
+      where: { id: Number(rentId) },
       data: {
         bookId,
         userId,
@@ -58,8 +69,27 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(rent, { status: 201 });
+    return NextResponse.json(rent, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create rent' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update rent' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const url = new URL(req.url);
+  const rentId = url.pathname.split('/').pop();
+  const verification = await verifyToken(req);
+  if (verification.error) {
+    return NextResponse.json({ error: verification.error }, { status: verification.status });
+  }
+
+  try {
+    await prisma.rent.delete({
+      where: { id: Number(rentId) },
+    });
+
+    return NextResponse.json({ message: 'Rent deleted successfully' }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to delete rent' }, { status: 500 });
   }
 }

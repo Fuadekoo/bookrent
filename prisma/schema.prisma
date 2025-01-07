@@ -37,7 +37,7 @@ model Book {
   description String?
   quantity    Int
   coverPhoto  String
-  isActive    Boolean  @default(true)
+  isActive    Boolean  @default(false)
   ownerId     Int
   owner       User     @relation(fields: [ownerId], references: [id])
   rents       Rent[]
