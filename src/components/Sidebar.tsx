@@ -21,11 +21,11 @@ const Sidebar = () => {
             </li>
             <li className="p-2 hover:bg-cyan-700 flex items-center">
               <FaBook className="mr-2" />
-              <Link href="/books">Books</Link>
+              <Link href="/admin/books">Books</Link>
             </li>
             <li className="p-2 hover:bg-cyan-700 flex items-center">
               <FaUser className="mr-2" />
-              <Link href="/owners">Owners</Link>
+              <Link href="/admin/owners">Owners</Link>
             </li>
             <li className="p-2 hover:bg-cyan-700 flex items-center">
               <FaUser className="mr-2" />

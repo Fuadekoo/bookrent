@@ -1,9 +1,26 @@
-import Link from 'next/link';
+import React from 'react';
+import { FaSearch, FaEllipsisV } from 'react-icons/fa';
 
 const LiveBookStatus = () => {
+  const bookStatusData = [
+    { id: 1, bookNo: '6465', owner: 'Nardos T', ownerAvatar: '/ab.jpg', status: 'Rented', statusColor: 'bg-red-500', price: '40 Birr' },
+    { id: 2, bookNo: '5665', owner: 'Harry M', ownerAvatar: '/ab.jpg', status: 'Free', statusColor: 'bg-blue-500', price: '0.0 Birr' },
+    { id: 3, bookNo: '1755', owner: 'Tesfu N', ownerAvatar: '/ab.jpg', status: 'Free', statusColor: 'bg-blue-500', price: '0.0 Birr' },
+  ];
+
   return (
     <div className="live-book-status p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Live Book Status</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Live Book Status</h2>
+        <div className="flex items-center">
+          <button className="text-gray-500 hover:text-gray-700 mr-4">
+            <FaSearch />
+          </button>
+          <button className="text-gray-500 hover:text-gray-700">
+            <FaEllipsisV />
+          </button>
+        </div>
+      </div>
       <table className="min-w-full bg-white">
         <thead>
           <tr>
@@ -15,45 +32,21 @@ const LiveBookStatus = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className="py-2 px-4 border-b">01</td>
-            <td className="py-2 px-4 border-b">6465</td>
-            <td className="py-2 px-4 border-b flex items-center">
-              <img src="/path/to/avatar1.jpg" alt="Nardos T" className="w-6 h-6 rounded-full mr-2" />
-              Nardos T
-            </td>
-            <td className="py-2 px-4 border-b flex items-center">
-              <span className="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-              Rented
-            </td>
-            <td className="py-2 px-4 border-b">40 Birr</td>
-          </tr>
-          <tr>
-            <td className="py-2 px-4 border-b">02</td>
-            <td className="py-2 px-4 border-b">5665</td>
-            <td className="py-2 px-4 border-b flex items-center">
-              <img src="/path/to/avatar2.jpg" alt="Harry M" className="w-6 h-6 rounded-full mr-2" />
-              Harry M
-            </td>
-            <td className="py-2 px-4 border-b flex items-center">
-              <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
-              Free
-            </td>
-            <td className="py-2 px-4 border-b">0.0 Birr</td>
-          </tr>
-          <tr>
-            <td className="py-2 px-4 border-b">03</td>
-            <td className="py-2 px-4 border-b">1755</td>
-            <td className="py-2 px-4 border-b flex items-center">
-              <img src="/path/to/avatar3.jpg" alt="Tesfu N" className="w-6 h-6 rounded-full mr-2" />
-              Tesfu N
-            </td>
-            <td className="py-2 px-4 border-b flex items-center">
-              <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
-              Free
-            </td>
-            <td className="py-2 px-4 border-b">0.0 Birr</td>
-          </tr>
+          {bookStatusData.map((book, index) => (
+            <tr key={book.id}>
+              <td className="py-2 px-4 border-b">{String(index + 1).padStart(2, '0')}</td>
+              <td className="py-2 px-4 border-b">{book.bookNo}</td>
+              <td className="py-2 px-4 border-b flex items-center">
+                <img src={book.ownerAvatar} alt={book.owner} className="w-6 h-6 rounded-full mr-2" />
+                {book.owner}
+              </td>
+              <td className="py-2 px-4 border-b">
+              <span className={`w-3 h-3 ${book.statusColor} rounded-full mr-2`}>.</span> 
+              {book.status}
+              </td>
+              <td className="py-2 px-4 border-b">{book.price}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
