@@ -50,7 +50,7 @@ const EarningSummary = () => {
 
   return (
     <div className="earning-summary p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Earning Summary</h2>
+      {/* <h2 className="text-xl font-semibold mb-4">Earning Summary</h2> */}
       <canvas ref={chartRef} className="w-full h-64"></canvas>
     </div>
   );

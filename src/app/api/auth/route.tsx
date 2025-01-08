@@ -30,5 +30,8 @@ export async function POST(req: NextRequest) {
     expiresIn: '1h',
   });
 
-  return NextResponse.json({ token }, { status: 200 });
+  // hide a passsowrd from sending to the client
+  
+
+  return NextResponse.json({ token:token ,user:user, status: 200 });
 }

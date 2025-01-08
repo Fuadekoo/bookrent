@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axiosInstance from '../../lib/axiosInstance';
+import PublicRoute from '../../components/PublicRoute';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -17,6 +18,7 @@ const LoginPage = () => {
       const response = await axiosInstance.post('/auth', { email, password });
       const data = response.data;
       localStorage.setItem('token', data.token); // Save token to local storage
+      localStorage.setItem('user',JSON.stringify(data.user));  //save the login user to local storage
       router.push('/'); // Redirect to the home page or any other page
     } catch (error) {
       setError(error.response?.data?.error || 'Login failed');

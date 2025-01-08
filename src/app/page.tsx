@@ -1,7 +1,10 @@
 import Image from "next/image";
+import DefaultLayout from "../components/DefaultLayout";
 
 export default function Home() {
   return (
-   <h1>hello world</h1>
+   <DefaultLayout>
+    <h1>hello boss</h1>
+   </DefaultLayout>
   );
 }

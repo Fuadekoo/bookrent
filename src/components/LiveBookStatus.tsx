@@ -9,9 +9,9 @@ const LiveBookStatus = () => {
   ];
 
   return (
-    <div className="live-book-status p-4 bg-white rounded-lg shadow-md">
+    <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Live Book Status</h2>
+        <h2 className="text-xl font-semibold"></h2>
         <div className="flex items-center">
           <button className="text-gray-500 hover:text-gray-700 mr-4">
             <FaSearch />

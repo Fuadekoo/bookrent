@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
@@ -123,7 +124,7 @@ export async function DELETE(req: NextRequest) {
       await prisma.user.delete({
         where: { id: Number(id) },
       });
-      return NextResponse.json({}, { status: 204 });
+    return NextResponse.json({ message: 'User deleted successfully' }, { status: 200 });
     } catch (error) {
       return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
     }

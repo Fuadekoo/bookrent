@@ -1,24 +1,75 @@
 "use client";
-import React, { useState } from 'react';
-import { FaTrash, FaEye, FaCheck } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
 import DefaultLayout from '../../../components/DefaultLayout';
+import axiosInstance from '../../../lib/axiosInstance';
+import { FaCheck, FaTimes, FaEdit, FaEye, FaTrash } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 
 const AdminOwners = () => {
+  const [ownersData, setOwnersData] = useState([]);
   const [selectedOwner, setSelectedOwner] = useState(null);
 
-  const ownersData = [
-    { id: 1, owner: 'Nardos T', email: 'nardos@gmail.com', location: 'Addis Ababa', phone: '0911555555', uploads: 15, status: 'Active' },
-    { id: 2, owner: 'John Doe', email: 'john@gmail.com', location: 'Adama', phone: '0911222333', uploads: 10, status: 'Inactive' },
-    { id: 3, owner: 'Jane Smith', email: 'jane@gmail.com', location: 'Dire Dawa', phone: '0911445566', uploads: 20, status: 'Active' },
-    { id: 4, owner: 'Michael Johnson', email: 'michael@gmail.com', location: 'Gondar', phone: '0911667788', uploads: 8, status: 'Active' },
-  ];
+  useEffect(() => {
+    const fetchOwnersData = async () => {
+      try {
+        const response = await axiosInstance.get('/users');
+        setOwnersData(response.data);
+      } catch (error) {
+        console.error('Error fetching owners data:', error);
+      }
+    };
+
+    fetchOwnersData();
+  }, []);
+
+  const toggleStatus = async (ownerId, currentStatus) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axiosInstance.patch(
+        `/users/${ownerId}`,
+        { isActive: !currentStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        // Update the owner status in state
+        const updatedOwnersData = ownersData.map((owner) =>
+          owner.id === ownerId ? { ...owner, isActive: !currentStatus } : owner
+        );
+        setOwnersData(updatedOwnersData);
+      }
+    } catch (error) {
+      console.error('Error updating owner status:', error);
+    }
+  };
+
+  const handleChangeStatus = (ownerId, currentStatus) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You are about to change the status of this owner.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, change it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        toggleStatus(ownerId, currentStatus);
+        Swal.fire(
+          'Changed!',
+          'The status has been changed.',
+          'success'
+        );
+      }
+    });
+  };
 
   const handleViewClick = (owner) => {
     setSelectedOwner(owner);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedOwner(null);
   };
 
   return (
@@ -30,9 +81,9 @@ const AdminOwners = () => {
             <thead>
               <tr>
                 <th className="py-2">No.</th>
-                <th className="py-2">Owner</th>
-                <th className="py-2">Uploads</th>
-                <th className="py-2">Location</th>
+                <th className="py-2">Name</th>
+                <th className="py-2">Email</th>
+                <th className="py-2">Phone Number</th>
                 <th className="py-2">Status</th>
                 <th className="py-2">Action</th>
               </tr>
@@ -41,14 +92,17 @@ const AdminOwners = () => {
               {ownersData.map((owner, index) => (
                 <tr key={owner.id} className="text-center border-b">
                   <td className="py-2">{String(index + 1).padStart(2, '0')}</td>
-                  <td className="py-2">{owner.owner}</td>
-                  <td className="py-2">{owner.uploads} Books</td>
-                  <td className="py-2">{owner.location}</td>
+                  <td className="py-2">{owner.name}</td>
+                  <td className="py-2">{owner.email}</td>
+                  <td className="py-2">{owner.phone_number}</td>
                   <td className="py-2">
-                    <div className={`inline-flex items-center px-2 py-1 border rounded-lg bg-green-200`}>
-                      <FaCheck className="text-green-500 mr-1" />
-                      {owner.status}
-                    </div>
+                    <button
+                      onClick={() => handleChangeStatus(owner.id, owner.isActive)}
+                      className={`inline-flex items-center px-2 py-1 border rounded-lg ${owner.isActive ? 'bg-green-200' : 'bg-red-200'}`}
+                    >
+                      {owner.isActive ? <FaCheck className="text-green-600 mr-1" /> : <FaTimes className="text-red-600 mr-1" />}
+                      {owner.isActive ? 'Active' : 'Inactive'}
+                    </button>
                   </td>
                   <td className="py-2 flex justify-center space-x-2">
                     <button className="text-blue-500 hover:text-blue-700" onClick={() => handleViewClick(owner)}>
@@ -58,9 +112,6 @@ const AdminOwners = () => {
                       <FaTrash />
                     </button>
                   </td>
-                  <td className="py-2">
-                    <button className="bg-blue-500 text-white px-4 py-1 rounded">Approve</button>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -68,14 +119,7 @@ const AdminOwners = () => {
         </div>
         {selectedOwner && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-bold mb-4">Owner Details</h2>
-              <p><strong>Name:</strong> {selectedOwner.owner}</p>
-              <p><strong>Email:</strong> {selectedOwner.email}</p>
-              <p><strong>Location:</strong> {selectedOwner.location}</p>
-              <p><strong>Phone Number:</strong> {selectedOwner.phone}</p>
-              <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded" onClick={handleCloseModal}>Close</button>
-            </div>
+            {/* Modal content for viewing owner details */}
           </div>
         )}
       </div>

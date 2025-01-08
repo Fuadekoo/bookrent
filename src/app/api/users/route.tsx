@@ -75,11 +75,15 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    const decoded = authenticate(req);
+    if (decoded.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
     const { id } = await req.json();
     await prisma.user.delete({
       where: { id: Number(id) },
     });
-    return NextResponse.json({}, { status: 204 });
+    return NextResponse.json({ message: 'User deleted successfully' }, { status: 204 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
   }
