@@ -11,7 +11,12 @@ const Books = () => {
   useEffect(() => {
     const fetchBooksData = async () => {
       try {
-        const response = await axiosInstance.get('/books');
+        const token = localStorage.getItem('token');
+        const response = await axiosInstance.get('/books', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setBooksData(response.data);
       } catch (error) {
         console.error('Error fetching books data:', error);
